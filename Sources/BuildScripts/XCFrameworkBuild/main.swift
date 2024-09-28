@@ -97,7 +97,7 @@ enum Library: String, CaseIterable {
         case .libmpv:
             return "https://github.com/mpv-player/mpv"
         case .FFmpeg:
-            return "https://github.com/FFmpeg/FFmpeg"
+            return "https://github.com/prozyy/ffmpeg-6.1"
         case .openssl:
             return "https://github.com/mpvkit/openssl-build/releases/download/\(self.version)/openssl-all.zip"
         case .gnutls:
@@ -441,6 +441,8 @@ private class BuildMPV: BaseBuild {
 private class BuildFFMPEG: BaseBuild {
     init() {
         super.init(library: .FFmpeg)
+        // force pull latest version from master/main branch
+        self.pullLatestVersion = true
     }
 
     override func beforeBuild() throws {
