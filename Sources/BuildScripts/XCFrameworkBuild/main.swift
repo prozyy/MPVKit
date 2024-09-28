@@ -617,7 +617,7 @@ private class BuildFFMPEG: BaseBuild {
                     arguments.append("--enable-protocol=\(library.rawValue)")
                 } else if library == .libdav1d {
                     arguments.append("--enable-decoder=\(library.rawValue)")
-                }if library == .libuavs3d {
+                } else if library == .libuavs3d {
                     arguments.append("--enable-decoder=\(library.rawValue)")
                     arguments.append("--enable-decoder=avs3")
                 } else if library == .libass {
