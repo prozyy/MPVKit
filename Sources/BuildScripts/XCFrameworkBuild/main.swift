@@ -468,9 +468,9 @@ private class BuildFFMPEG: BaseBuild {
 
     override func flagsDependencelibrarys() -> [Library] {
         if BaseBuild.options.enableGPL {
-            return [.gmp, .nettle, .gnutls, .libsmbclient]
+            return [.gmp, .nettle, .gnutls, .libsmbclient, .libuavs3d]
         } else {
-            return [.gmp, .nettle, .gnutls]
+            return [.gmp, .nettle, .gnutls, .libuavs3d]
         }
     }
 
@@ -615,8 +615,11 @@ private class BuildFFMPEG: BaseBuild {
                 arguments.append("--enable-\(library.rawValue)")
                 if library == .libsmbclient {
                     arguments.append("--enable-protocol=\(library.rawValue)")
-                } else if library == .libdav1d || library == .libuavs3d {
+                } else if library == .libdav1d {
                     arguments.append("--enable-decoder=\(library.rawValue)")
+                }if library == .libuavs3d {
+                    arguments.append("--enable-decoder=\(library.rawValue)")
+                    arguments.append("--enable-decoder=avs3")
                 } else if library == .libass {
                     arguments.append("--enable-filter=ass")
                     arguments.append("--enable-filter=subtitles")
