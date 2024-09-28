@@ -10,7 +10,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             MPVMetalPlayerView(coordinator: coordinator)
-                .play(URL(string: "https://github.com/mpvkit/video-test/raw/master/resources/HDR10_ToneMapping_Test_240_1000_nits.mp4")!)
+                .play(URL(string: "https://raw.githubusercontent.com/prozyy/MPVKit/refs/heads/main/data/cctv_av3a.mp4")!)
                 .onPropertyChange{ player, propertyName, propertyData in
                     switch propertyName {
                     case MPVProperty.videoParamsSigPeak:
@@ -34,6 +34,11 @@ struct ContentView: View {
                         Text(coordinator.pause ? "play" : "pause").frame(maxWidth: .infinity)
                     }
                     Divider()
+                    Button {
+                        coordinator.play(URL(string: "https://raw.githubusercontent.com/prozyy/MPVKit/refs/heads/main/data/cctv_av3a.mp4")!)
+                    } label: {
+                        Text("av3a").frame(maxWidth: .infinity)
+                    }
                     Button {
                         coordinator.play(URL(string: "https://vjs.zencdn.net/v/oceans.mp4")!)
                     } label: {
