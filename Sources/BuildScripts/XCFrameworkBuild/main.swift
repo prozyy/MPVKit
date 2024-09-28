@@ -22,6 +22,7 @@ do {
     
     // ffmpeg
     try BuildUavs3d().buildALL()
+    try BuildAvs3a().buildALL()
     try BuildDovi().buildALL()
     try BuildVulkan().buildALL()
     try BuildShaderc().buildALL()
@@ -42,7 +43,7 @@ do {
 
 
 enum Library: String, CaseIterable {
-    case libmpv, FFmpeg, libshaderc, vulkan, lcms2, libdovi, openssl, libunibreak, libfreetype, libfribidi, libharfbuzz, libass, libsmbclient, libplacebo, libdav1d, gmp, nettle, gnutls, libuchardet, libbluray, libluajit, libuavs3d
+    case libmpv, FFmpeg, libshaderc, vulkan, lcms2, libdovi, openssl, libunibreak, libfreetype, libfribidi, libharfbuzz, libass, libsmbclient, libplacebo, libdav1d, gmp, nettle, gnutls, libuchardet, libbluray, libluajit, libuavs3d, libavs3a
     var version: String {
         switch self {
         case .libmpv:
@@ -89,6 +90,8 @@ enum Library: String, CaseIterable {
             return "2.1.0"
         case .libuavs3d:
             return "1.2.1"
+        case .libavs3a:
+            return "1.0"
         }
     }
 
@@ -138,6 +141,8 @@ enum Library: String, CaseIterable {
             return "https://github.com/mpvkit/libluajit-build/releases/download/\(self.version)/libluajit-all.zip"
         case .libuavs3d:
             return "https://github.com/mpvkit/libuavs3d-build/releases/download/\(self.version)/libuavs3d-all.zip"
+        case .libavs3a:
+            return "https://github.com/prozyy/avs3a.git"
         }
     }
 
@@ -360,6 +365,14 @@ enum Library: String, CaseIterable {
                     checksum: "https://github.com/mpvkit/libuavs3d-build/releases/download/\(self.version)/Libuavs3d.xcframework.checksum.txt"
                 ),
             ]
+        case .libavs3a:
+            return  [
+                .target(
+                    name: "Libavs3a",
+                    url: "https://github.com/mpvkit/libavs3a-build/releases/download/\(BaseBuild.options.releaseVersion)/Libavs3a.xcframework.zip",
+                    checksum: "https://github.com/mpvkit/libavs3a-build/releases/download/\(BaseBuild.options.releaseVersion)/Libavs3a.xcframework.checksum.txt"
+                ),
+            ]
         }
     }
 }
@@ -468,9 +481,9 @@ private class BuildFFMPEG: BaseBuild {
 
     override func flagsDependencelibrarys() -> [Library] {
         if BaseBuild.options.enableGPL {
-            return [.gmp, .nettle, .gnutls, .libsmbclient, .libuavs3d]
+            return [.gmp, .nettle, .gnutls, .libsmbclient, .libuavs3d, .libavs3a]
         } else {
-            return [.gmp, .nettle, .gnutls, .libuavs3d]
+            return [.gmp, .nettle, .gnutls, .libuavs3d, .libavs3a]
         }
     }
 
@@ -654,7 +667,7 @@ private class BuildFFMPEG: BaseBuild {
         // Documentation options:
         "--disable-doc", "--disable-htmlpages", "--disable-manpages", "--disable-podpages", "--disable-txtpages",
         // Component options:
-        "--enable-avcodec", "--enable-avformat", "--enable-avutil", "--enable-network", "--enable-swresample", "--enable-swscale",
+        "--enable-avcodec", "--enable-avformat", "--enable-avutil", "--enable-network", "--enable-swresample", "--enable-swscale", "--enable-libuavs3d", "--enable-libarcdav3a",
         "--disable-devices", "--disable-outdevs", "--disable-indevs", "--disable-postproc",
         // ,"--disable-pthreads"
         // ,"--disable-w32threads"
@@ -689,7 +702,7 @@ private class BuildFFMPEG: BaseBuild {
         "--enable-demuxer=ape", "--enable-demuxer=asf", "--enable-demuxer=ass", "--enable-demuxer=av1",
         "--enable-demuxer=avi", "--enable-demuxer=caf", "--enable-demuxer=concat",
         "--enable-demuxer=dash", "--enable-demuxer=data", "--enable-demuxer=dv",
-        "--enable-demuxer=eac3",
+        "--enable-demuxer=eac3", "--enable-demuxer=avs3",
         "--enable-demuxer=flac", "--enable-demuxer=flv", "--enable-demuxer=h264", "--enable-demuxer=hevc",
         "--enable-demuxer=hls", "--enable-demuxer=live_flv", "--enable-demuxer=loas", "--enable-demuxer=m4v",
         // matroska=mkv,mka,mks,mk3d
@@ -722,7 +735,7 @@ private class BuildFFMPEG: BaseBuild {
         "--enable-decoder=amr*", "--enable-decoder=ape", "--enable-decoder=cook",
         "--enable-decoder=dca", "--enable-decoder=dolby_e", "--enable-decoder=eac3*", "--enable-decoder=flac",
         "--enable-decoder=mp1*", "--enable-decoder=mp2*", "--enable-decoder=mp3*", "--enable-decoder=opus",
-        "--enable-decoder=pcm*", "--enable-decoder=sonic",
+        "--enable-decoder=pcm*", "--enable-decoder=sonic", "--enable-decoder=libarcdav3a",
         "--enable-decoder=truehd", "--enable-decoder=tta", "--enable-decoder=vorbis", "--enable-decoder=wma*",
         // 字幕
         "--enable-decoder=ass", "--enable-decoder=ccaption", "--enable-decoder=dvbsub", "--enable-decoder=dvdsub",
@@ -992,5 +1005,31 @@ private class BuildVulkan: ZipBaseBuild {
         }
 
         try super.afterBuild()
+    }
+}
+
+private class BuildAvs3a: BaseBuild {
+    init() {
+        super.init(library: .libavs3a)
+
+        // force pull latest version from master/main branch
+        self.pullLatestVersion = true
+    }
+
+    override func beforeBuild() throws {
+        try super.beforeBuild()
+
+        // generate version
+        // try Utility.launch(path: (directoryURL + "version.sh").path, arguments: [], currentDirectoryURL: directoryURL)
+    }
+
+    override func build(platform: PlatformType, arch: ArchType) throws {
+
+        try super.build(platform: platform, arch: arch)
+    }
+
+    override func arguments(platform : PlatformType, arch : ArchType) -> [String] {
+        [
+        ]
     }
 }
