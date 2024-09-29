@@ -80,6 +80,8 @@ final class MPVMetalViewController: UIViewController {
         //checkError(mpv_set_option_string(mpv, "gpu-context", "moltenvk"))
         checkError(mpv_set_option_string(mpv, "hwdec", "videotoolbox"))
         checkError(mpv_set_option_string(mpv, "video-rotate", "no"))
+//        checkError(mpv_set_option_string(mpv, "ao", "avfoundation"))
+        checkError(mpv_set_option_string(mpv, "audio-normalize-downmix", "yes"))
         
         checkError(mpv_set_option_string(mpv, "ytdl", "no"))
 //        checkError(mpv_set_option_string(mpv, "target-colorspace-hint", "yes")) // HDR passthrough

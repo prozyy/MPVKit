@@ -385,9 +385,9 @@ private class BuildMPV: BaseBuild {
 
     override func flagsDependencelibrarys() -> [Library] {
         if BaseBuild.options.enableGPL {
-            return [.gmp, .libsmbclient]
+            return [.gmp, .libsmbclient, .libavs3a]
         } else {
-            return [.gmp]
+            return [.gmp,  .libavs3a]
         }
     }
 
@@ -433,8 +433,9 @@ private class BuildMPV: BaseBuild {
         } else {
             array.append("-Dvideotoolbox-gl=disabled")
             array.append("-Dswift-build=disabled")
+            array.append("-Dcoreaudio=enabled")
             array.append("-Daudiounit=enabled")
-            array.append("-Davfoundation=disabled")
+            array.append("-Davfoundation=enabled")
             array.append("-Dlua=disabled")
             if platform == .maccatalyst {
                 array.append("-Dcocoa=disabled")
