@@ -46,6 +46,16 @@ struct MPVMetalPlayerView: UIViewControllerRepresentable {
             
             self.onPropertyChange?(player, propertyName, data)
         }
+        
+        // Call this to release the player and free resources
+        func releasePlayer() {
+            player?.stopPlayback() // Assuming stopPlayback() stops and releases the player
+            player = nil
+        }
+    }
+    
+    // Call this to release resources when the view is no longer needed
+    func deallocate() {
+        coordinator.releasePlayer()
     }
 }
-

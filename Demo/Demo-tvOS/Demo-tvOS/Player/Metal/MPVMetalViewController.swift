@@ -49,6 +49,19 @@ final class MPVMetalViewController: UIViewController {
             loadFile(url)
         }
     }
+    // 捕获遥控器按键按下的事件
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        super.pressesBegan(presses, with: event)
+        // 遍历按键事件
+        for press in presses {
+            if press.type == .playPause {
+                // 处理播放/暂停按键事件
+                togglePause()
+            }else if press.type == .menu{
+                stopPlayback()
+            }
+        }
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -113,6 +126,7 @@ final class MPVMetalViewController: UIViewController {
         }
         
         command("loadfile", args: args)
+        print("loadfile", args)
     }
     
     func togglePause() {
@@ -125,6 +139,20 @@ final class MPVMetalViewController: UIViewController {
     
     func pause() {
         setFlag(MPVProperty.pause, true)
+    }
+    
+    func stopPlayback() {
+        // 暂停播放
+        setFlag(MPVProperty.pause, true)
+        
+        // 停止当前播放文件
+        command("stop", args: [])
+        // 销毁 MPV 实例，释放资源
+        if mpv != nil {
+            mpv_terminate_destroy(mpv)
+            mpv = nil
+            print("MPV player resources have been released.")
+        }
     }
     
     private func getDouble(_ name: String) -> Double {
